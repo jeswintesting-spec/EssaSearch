@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EssaSearch</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 class="logo">Essa<span>Search</span></h1>
+            <p class="subtitle">Enterprise Distributed Search Engine</p>
+        </header>
+        
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Search for documents... (e.g. author:Alice AND fox)" autocomplete="off">
+            <button id="searchBtn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            </button>
+        </div>
+
+        <div class="stats-bar" id="statsBar" style="display: none;">
+            <span id="hitCount">0 results found</span>
+            <span id="latencyInfo"></span>
+        </div>
+
+        <div id="resultsContainer" class="results-container">
+            <!-- Results injected here -->
+        </div>
+    </div>
+    <script src="/static/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  essasearch:
+    build: .
+    container_name: essasearch-node
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped
+    environment:
+      - PYTHONUNBUFFERED=1
