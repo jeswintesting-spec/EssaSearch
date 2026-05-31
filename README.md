@@ -1,53 +1,92 @@
-# EssaSearch
-![Python](https://img.shields.io/badge/Python-3.11%2B-blue)
-![Docker](https://img.shields.io/badge/Docker-Supported-blue)
-![License](https://img.shields.io/badge/License-MIT-green)
+# 🔍 EssaSearch
 
-A high-performance, full-text distributed search engine written entirely in Python. EssaSearch demonstrates an understanding of advanced data structures and search algorithms utilized by industry leaders like Google and Amazon.
+![Python](https://img.shields.io/badge/Python-3.10+-blue.svg?style=for-the-badge&logo=python&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-Ready-2496ED.svg?style=for-the-badge&logo=docker&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-009688.svg?style=for-the-badge&logo=fastapi&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)
 
-## 🚀 Key Features
-- **Docker Containerization:** Fully containerized architecture using `docker-compose` for instant, OS-agnostic deployments of the entire cluster.
-- **Python Client SDK:** Includes a clean, object-oriented `EssaClient` SDK allowing developers to seamlessly integrate the search engine into their own Python applications.
-- **Sleek Web Frontend:** A beautiful, responsive single-page web UI built with HTML/CSS/JS that interacts directly with the backend API to provide real-time search results, latency metrics, and highlighted snippets.
-- **Cluster Backup & Restore:** Point-in-time snapshotting allows you to compress the entire search engine (memory and immutable disk segments) into a single `.zip` archive, and instantly restore the cluster from a backup.
-- **LRU Query Caching:** Employs a custom Least Recently Used (LRU) Cache to store frequent search queries, eliminating redundant AST evaluations and vector math to guarantee `O(1)` ultra-low latency response times.
-- **Contextual Snippet Highlighting:** Dynamically scans documents to generate Google-style search snippets, centering the preview around the highest density of query terms and injecting rich terminal highlighting.
-- **Hybrid Search (Semantic + Keyword):** Combines dense vector embeddings (via `sentence-transformers`) using cosine similarity with sparse BM25 ranking to deliver the most semantically relevant search results.
-- **AST Query Parser:** A custom Recursive Descent Parser that builds an Abstract Syntax Tree (AST) to support advanced boolean queries like `author:Alice AND (fox OR dog) NOT lazy`.
-- **Thread-Safe Concurrency (Read-Write Locks):** A custom-built synchronization primitive using `threading.Condition` ensures thousands of simultaneous search queries (reads) can execute concurrently, while safely isolating index mutations (writes) to prevent data corruption or writer starvation.
-- **Disk Persistence & Segment Merging (LSM-Tree style):** Automatically flushes in-memory indexes to immutable disk segments, with a background merge process to optimize query speed and eliminate fragmentation.
-- **Typo Tolerance & Fuzzy Search:** Implements a custom **Prefix Tree (Trie)** and dynamic programming **Levenshtein Distance** algorithm to correct typos and find closest matches on the fly.
-- **Inverted Index Engine:** A custom, highly-optimized data structure mapping tokenized words to document IDs.
-- **BM25 / TF-IDF Ranking Algorithm:** Complex algorithmic relevance scoring to ensure the most accurate search results, rather than just returning exact keyword matches.
-- **REST API Server:** Built on FastAPI to enable easy distributed node deployments.
-- **Rich CLI Client:** A beautifully formatted, interactive terminal interface for managing the search engine.
+A high-performance, distributed full-text and semantic search engine built entirely from scratch in Python. 
 
-## 🛠 Quick Start
+EssaSearch bridges the gap between classic keyword retrieval (Elasticsearch/Lucene) and modern AI vector databases. It leverages an Abstract Syntax Tree (AST) for complex boolean queries, an LSM-Tree for immutable disk persistence, and Sentence-Transformers for semantic understanding.
 
-### 1. Running Locally (Python)
+---
+
+## 🚀 Key Architectural Features
+
+### 🧠 Search & Retrieval
+- **Hybrid Search Engine:** Fuses sparse **BM25/TF-IDF** keyword scoring with dense **Cosine Similarity** vector matching (via `sentence-transformers` & PyTorch) for unparalleled relevance.
+- **AST Query Parser:** A custom Recursive Descent Parser compiler frontend that translates complex user queries (`author:Alice AND (fox OR dog) NOT lazy`) into an executable Abstract Syntax Tree.
+- **Contextual Snippet Highlighting:** Dynamically scans documents and generates Google-style previews, centering around the highest density of query terms with rich formatting.
+- **Typo Tolerance:** Implements a custom **Trie (Prefix Tree)** and dynamic programming **Levenshtein Distance** algorithms to correct typos instantly.
+
+### ⚙️ Systems Engineering
+- **Read-Write Lock Concurrency:** A custom synchronization primitive built on `threading.Condition` ensures thousands of simultaneous concurrent reads without starving index writers, guaranteeing thread safety.
+- **Disk Persistence (LSM-Tree):** Memory indexes are periodically flushed to immutable JSON disk segments. A background merge process compacts segments to optimize I/O overhead.
+- **LRU Query Caching:** A custom Least Recently Used (LRU) Cache bypasses expensive AST evaluations and vector mathematics for frequent queries, guaranteeing `O(1)` ultra-low latency.
+- **Point-in-Time Backups:** Native API and CLI support for compressing the entire cluster (memory and disk) into a snapshot archive for disaster recovery.
+
+### 🌐 Interfacing
+- **Sleek Web Frontend:** A beautiful, responsive Single-Page Application (SPA) built with HTML/CSS/JS that interacts directly with the API.
+- **Python Client SDK:** An object-oriented `EssaClient` allowing seamless integration into other Python microservices.
+- **RESTful API:** Powered by FastAPI for highly scalable node deployments.
+
+---
+
+## 📚 Documentation Directory
+
+EssaSearch comes with comprehensive, enterprise-grade documentation to help you navigate, deploy, and integrate the system.
+
+1. 📖 [User Manual (`USER_MANUAL.md`)](./USER_MANUAL.md)
+   - Learn how to use the interactive CLI.
+   - Master the advanced AST Query Syntax (AND, OR, NOT, grouping).
+   - Understand how Hybrid Search scores are calculated.
+2. 🔌 [Integration Guide (`INTEGRATION_GUIDE.md`)](./INTEGRATION_GUIDE.md)
+   - Step-by-step instructions on utilizing the Python Client SDK (`client.py`).
+   - Detailed API endpoint references (`/search`, `/index`, `/backup`).
+3. 🌍 [Master Ecosystem Guide (`ECOSYSTEM_INTEGRATION.md`)](./ECOSYSTEM_INTEGRATION.md)
+   - The architectural blueprint for connecting EssaSearch with **EssaDB**, **EssaProxy**, **EssaConnect**, and **EssaCache**.
+   - Includes Mermaid diagrams and CDC (Change Data Capture) patterns.
+
+---
+
+## ⚡ Quickstart (Docker)
+
+The fastest way to experience EssaSearch is through Docker. This avoids having to install gigabytes of PyTorch machine-learning dependencies on your host machine.
+
 ```bash
-# Create a virtual environment
-python3 -m venv venv
+# 1. Clone the repository
+git clone https://github.com/yourusername/EssaSearch.git
+cd EssaSearch
+
+# 2. Boot the cluster in the background
+docker-compose up -d
+
+# 3. Access the interfaces
+```
+- **Web UI:** Open [http://localhost:8000](http://localhost:8000) in your browser.
+- **API Docs:** Open [http://localhost:8000/docs](http://localhost:8000/docs) for the interactive Swagger UI.
+
+## 💻 Local Development (Python Virtual Env)
+
+If you wish to run the interactive CLI natively, install the project locally:
+
+```bash
+# 1. Create a virtual environment
+python -m venv venv
 source venv/bin/activate
 
-# Install dependencies
-pip install fastapi uvicorn pydantic rich requests pytest
+# 2. Install dependencies
+pip install -r requirements.txt
+pip install -e .
 
-# Start the search engine server
-python main.py
+# 3. Start the Server
+uvicorn essasearch.server:app --reload
+
+# 4. Run the CLI (in a new terminal tab)
+essasearch
 ```
 
-### 2. Running the Interactive CLI
-In a new terminal window:
-```bash
-python cli.py
-```
+---
 
-### 3. Running with Docker
-```bash
-docker-compose up --build -d
-```
-
-## 📖 Documentation
-- [User Manual](USER_MANUAL.md): Comprehensive guide on using the CLI and search engine concepts.
-- [Integration Guide](INTEGRATION_GUIDE.md): Developer guide for integrating the Search API into your applications.
+## 📄 License
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
